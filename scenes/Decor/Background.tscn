@@ -136,10 +136,24 @@ tile_set = SubResource( 1 )
 format = 1
 tile_data = PoolIntArray( 6, 3, 0, 7, 3, 0, 65542, 3, 0, 65543, 3, 0, 131078, 3, 0, 131079, 3, 0, 196614, 4, 0, 196615, 3, 0, 262151, 4, 0 )
 
+[node name="GoldShadow" type="Sprite" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0.584314 )
+position = Vector2( 267, 25 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 320, 192, 192, 64 )
+
+[node name="Gold" type="Sprite" parent="."]
+position = Vector2( 271, 22 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 320, 0, 192, 64 )
+
 [node name="Node2D" type="Node2D" parent="."]
-modulate = Color( 0.964706, 0.964706, 0.964706, 1 )
-position = Vector2( 142, 10 )
-scale = Vector2( 2.5, 2.5 )
+modulate = Color( 0.313726, 0.0941176, 0.0941176, 1 )
+position = Vector2( 194, 15 )
+scale = Vector2( 1.5, 1.5 )
 
 [node name="Label" type="Label" parent="Node2D"]
 margin_right = 94.0

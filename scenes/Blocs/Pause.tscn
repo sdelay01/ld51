@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/ld51.png" type="Texture" id=2]
+[ext_resource path="res://scenes/Blocs/Money.gd" type="Script" id=3]
+
+[node name="Pause" type="Node2D"]
+position = Vector2( 0, 70 )
+script = ExtResource( 3 )
+
+[node name="BG" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 64, 64, 64 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 0.894118, 0.819608, 0.196078, 1 )
+position = Vector2( 24, 31 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 10, 150, 30, 20 )
