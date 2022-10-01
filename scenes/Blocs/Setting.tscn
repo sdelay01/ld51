@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scenes/Blocs/Setting.gd" type="Script" id=1]
 [ext_resource path="res://assets/ld51.png" type="Texture" id=2]
@@ -6,6 +6,14 @@
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
 region = Rect2( 0, 192, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 192, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 192, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 2 )
@@ -32,6 +40,16 @@ animations = [ {
 "frames": [ SubResource( 1 ) ],
 "loop": true,
 "name": "music_on",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 9 ) ],
+"loop": true,
+"name": "buy_off",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 10 ) ],
+"loop": true,
+"name": "buy_on",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 2 ) ],
@@ -83,7 +101,7 @@ region_rect = Rect2( 0, 64, 64, 64 )
 
 [node name="Icon" type="AnimatedSprite" parent="."]
 frames = SubResource( 7 )
-animation = "music_off"
+animation = "buy_off"
 centered = false
 
 [node name="Area2D" type="Area2D" parent="."]

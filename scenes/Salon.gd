@@ -15,9 +15,10 @@ var moneyAmount = 100
 
 var CustomLabel = preload("res://scenes/Label.tscn")
 
-var Buy = preload("res://scenes/Blocs/Buy.tscn")
-var buy
+#var Buy = preload("res://scenes/Blocs/Buy.tscn")
+#var buy
 var Setting = preload("res://scenes/Blocs/Setting.tscn")
+var buyOpen = false
 
 var Customer = preload("res://scenes/Customer.tscn")
 var customers = []
@@ -30,8 +31,10 @@ var eugene
 var Bulle = preload("res://scenes/Bulle.tscn")
 var bulle
 
+var furnitureNode2D # Node2D for all seats and chairs and mirrors
 var chairs = []
 var seats = []
+var tempObjects = []
 
 var objectives = [
 	"first_haircut",
@@ -55,10 +58,14 @@ func _ready():
 	title.position = Vector2(200, 30)
 	add_child(title)
 
-	add_chair(1)
-	add_chair(2) # TODO when buying
-	add_seat(1)
-	add_seat(2) # TODO when buying
+	furnitureNode2D = Node2D.new()
+	add_child(furnitureNode2D)
+
+	chairs.push_back(add_chair(1, false, furnitureNode2D))
+	add_mirror(1, furnitureNode2D)
+	#add_chair(2) # TODO when buying
+	seats.push_back(add_seat(1, false, furnitureNode2D))
+	#add_seat(2) # TODO when buying
 	
 	eugene = Eugene.instance()
 	add_child(eugene)
@@ -68,10 +75,7 @@ func _ready():
 	money = Money.instance()
 	money.setAmount(moneyAmount)
 	#add_child(money)
-	
-	buy = Buy.instance()
-	add_child(buy)
-	
+
 	customersNode = Node2D.new()
 	add_child(customersNode)
 	
@@ -85,7 +89,7 @@ func _ready():
 	tuto_completed()
 	
 func prepareButtons():
-	var t = ["pause", "sound", "music"]
+	var t = ["pause", "sound", "music", "buy"]
 	var index = 0
 	for butt in t:
 		var button = Setting.instance()
@@ -104,6 +108,23 @@ func trigger_sound():
 
 func trigger_music():
 	emit_signal("toggle_music")
+
+func trigger_buy():
+	if buyOpen:
+		overlay.queue_free()
+		for temp in tempObjects:
+			temp.queue_free()
+		tempObjects = []
+	else:
+		overlay = Overlay.instance()
+		overlay.modulate.a = 0.8
+		add_child(overlay)
+		if chairs.size() == 1:
+			tempObjects.push_back(add_mirror(2, overlay))
+			tempObjects.push_back(add_chair(2, true, overlay))
+		if seats.size() == 1:
+			tempObjects.push_back(add_seat(2, true, overlay))
+	buyOpen = !buyOpen
 	
 func open_overlay():
 	overlay = Overlay.instance()
@@ -138,11 +159,10 @@ func tuto_completed():
 	add_child(counter)
 	add_customer()
 	prepareButtons()
-	
 
 func on_counter_timeout():
 	add_customer()
-	
+
 func add_customer():
 	if customers.size() >= 4: return
 	var c = Customer.instance()
@@ -215,18 +235,58 @@ func get_next_seat():
 		if s.isFree: return s
 	return false
 
-func add_chair(rank):
-	var m = Mirror.instance()
-	add_child(m)
-	m.position = Vector2(rank * 120 - 100, 60)
-	
+func add_chair(_rank, _withPriceTag, _parent):
 	var c = Chair.instance()
-	add_child(c)
-	c.position = Vector2(rank * 120 - 100, 120)
-	chairs.push_back(c)
+	_parent.add_child(c)
+	c.position = Vector2(_rank * 120 - 100, 120)
+	if _withPriceTag:
+		var priceTag = add_price("$150", Vector2(0,0), "chair")
+		c.add_child(priceTag)
+	return c
 
-func add_seat(rank):
+func add_mirror(_rank, _parent):
+	var m = Mirror.instance()
+	_parent.add_child(m)
+	m.position = Vector2(_rank * 120 - 100, 60)
+	return m
+
+func add_seat(_rank, _withPriceTag, _parent):
 	var s = Seat.instance()
-	s.position = Vector2(160 + rank * 64, 100)
-	add_child(s)
-	seats.push_back(s)
+	s.position = Vector2(160 + _rank * 64, 100)
+	_parent.add_child(s)
+	if _withPriceTag:
+		var priceTag = add_price("$100", Vector2(0,0), "seat")
+		s.add_child(priceTag)
+	return s
+
+func add_price(_text, _pos, _type):
+	var cl = CustomLabel.instance()
+	var n2 = Node2D.new()
+	n2.add_child(cl)
+	cl.text = _text
+	n2.position = _pos
+	n2.add_child(add_buying_click(_type))
+	return n2
+
+func add_buying_click(_type):
+	var a2 = Area2D.new()
+	var c2 = CollisionShape2D.new()
+	var sc2 = CapsuleShape2D.new()
+	sc2.radius = 30
+	sc2.height = 50
+	c2.position = Vector2(64, 64)
+	c2.shape = sc2
+	a2.add_child(c2)
+	a2.connect("input_event", self, "on_click_buy", [_type])
+	return a2
+
+func on_click_buy(_viewport, event, _shape_idx, _type):
+	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+		if _type == "seat":
+			trigger_buy()
+			add_seat(2, false, furnitureNode2D)
+		if _type == "chair":
+			trigger_buy()
+			add_mirror(2, furnitureNode2D)
+			add_chair(2, false, furnitureNode2D)
+			

@@ -65,12 +65,12 @@ X Musique de fond
 - Pause + Overlay
 X Bouton Son On/Off
 X Bouton Musique On/Off
-- Buy things
+- Buy things WIP
 - Bug de seat et de walks, un seul place pour angry
 - Son tondeuse
 - Son clochette quand quelqu'un rentre
-- Son batterie quand une coiffure est finie
-- Nombre de lettre demandé augmente avec le temps
+- Son batterie quand une coiffure est finie pour in the hair tonight
+- le Nombre de lettre demandé augmente avec le temps
 - Customer angryness => -20$ en rouge rendez-vous non honoré
 - Beau coiffeur
 - Génération de personnages simples
