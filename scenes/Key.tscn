@@ -23,3 +23,5 @@ margin_bottom = 19.0
 custom_colors/font_color = Color( 0.14902, 0.172549, 0.168627, 1 )
 text = "Q
  "
+
+[node name="Tween" type="Tween" parent="."]

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/Label.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/ld51.png" type="Texture" id=2]
+[ext_resource path="res://scenes/Bulle.gd" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 143, 15 )
+
+[node name="Bulle" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 320, 320, 64 )
+
+[node name="Label" parent="." instance=ExtResource( 1 )]
+margin_left = -137.0
+margin_top = -5.0
+margin_right = -61.0
+margin_bottom = 18.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Hello everyone"
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+
+[connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]

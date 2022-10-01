@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var velocity = Vector2.ZERO
 export (int) var speed = 320
-
+var blocked = false
 var currentCustomer
 
 func _ready():
@@ -18,6 +18,7 @@ func get_input():
 	
 
 func _physics_process(_delta):
+	if blocked: return
 	get_input()
 	velocity = move_and_slide(velocity, Vector2.UP)
 	if position.x < 50: position.x = 50
@@ -30,20 +31,22 @@ func _physics_process(_delta):
 		$Sprite.play("default")
 
 func _input(event):
-	if event is InputEventKey and event.is_pressed():
-		if event.get_scancode() >= 65 and event.get_scancode() <= 90:
-			if currentCustomer:
-				currentCustomer.pressLetter(toLetter[str(event.get_scancode())])
-			print(event.get_scancode())
+	if blocked: return
+	if event is InputEventKey and event.is_pressed() and \
+		event.get_scancode() >= 65 and event.get_scancode() <= 90 and \
+		currentCustomer:
+			currentCustomer.pressLetter(toLetter[str(event.get_scancode())])
 		
 func _on_area_entered(area):
 	var workingChair = area.get_parent()
+	workingChair.eugenePresent = self
 	if workingChair.customer:
 		currentCustomer = workingChair.customer
 		workingChair.customer.displayLetter()
 
 func _on_area_exited(area):
 	var workingChair = area.get_parent()
+	workingChair.eugenePresent = null
 	if workingChair.customer:
 		currentCustomer = null
 		workingChair.customer.hideLetter()

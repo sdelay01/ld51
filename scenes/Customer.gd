@@ -1,9 +1,7 @@
 extends Node2D
 
-signal need_letter(letter)
-signal cut_done
-
-export (int) var speed = 80
+signal cut_done(positionX, customer)
+export (int) var speed = 300 #80
 
 var Key = preload("res://scenes/Key.tscn")
 var key
@@ -13,6 +11,7 @@ var actions_needed = 5
 var actions_done = 0
 var actions = ""
 
+const alphabet = "AZERTYUIOPMLKJHGFDSQWXCVBN"
 var salon
 var toward
 var lineY = 160
@@ -24,18 +23,31 @@ var isReady = false
 
 func _ready():
 	position = Vector2(400, lineY)
-	actions = "IAFLS"
 	persona = 1
+	setString()
 
-func init(_salon):
+func init(_salon, _actions_needed):
 	salon = _salon
+	actions_needed = _actions_needed
 	find_target()
 	isReady = true
 
-
+func setString():
+	var string = ""
+	for _i in range(5):
+		var rng = RandomNumberGenerator.new()
+		rng.randomize()
+		var strIndex = rng.randi_range(0, 25)
+		string += alphabet[strIndex]
+	actions = string
+	actions = "AZERT" # todo REMOVE THIS
+	
 func find_target():
 	var nextChair = salon.get_next_chair()
 	if nextChair:
+		if toward:
+			toward.setFree(true)
+			toward.setCustomer(null)
 		set_target(nextChair, "walks_in", "chair")
 		return
 	var nextSeat = salon.get_next_seat()
@@ -46,20 +58,17 @@ func find_target():
 	if action == "walks_in":
 		action = "angry"
 
-func set_target(_toward, _towardAction, _nextAction):
+func set_target(_toward, _action, _nextAction):
 	toward = _toward
-	towardAction = _towardAction
+	action = _action
 	nextAction = _nextAction
-
-func one_more_letter():
-	emit_signal("need_letter", actions[actions_done])
 
 func pressLetter(letter):
 	if letter == actions[actions_done]:
 		hideLetter()
 		actions_done += 1
 		if actions_done == actions_needed:
-			emit_signal("cut_done")
+			emit_signal("cut_done", position.x, self)
 			action = "walks_out"
 			toward.setFree(true)
 			toward.setCustomer(null)
@@ -70,8 +79,8 @@ func displayLetter():
 	key = Key.instance()
 	key.scale = Vector2(0.5, 0.5)
 	key.position = Vector2(31, -12)
-	key.appear(actions[actions_done])
 	add_child(key)
+	key.appear(actions[actions_done])
 
 func hideLetter():
 	if key: key.diseapper()

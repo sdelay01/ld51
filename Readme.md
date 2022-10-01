@@ -54,24 +54,29 @@ Customer will sit if they can
 
 
 # Todo
-- Money
-- Earn money
-- Lettres random mais pas utilisé
-- Customer angryness => -20$ rendez-vous non honoré
-- Beau coiffeur
-- Menu
+X Money
+X Earn money
+X Lettres random mais pas utilisé
+X Menu
+X Text
+X Tuto
+X Missions
+X Musique de fond
+- Pause + Overlay
+X Bouton Son On/Off
+X Bouton Musique On/Off
 - Buy things
-- Settings
-  - Pause
-  - Bouton Son On/Off
-  - Bouton Musique On/Off
-  - Continue
-- Missions
-- Musique de fond, accélération quand un angry, relenti sinon
+- Bug de seat et de walks, un seul place pour angry
 - Son tondeuse
 - Son clochette quand quelqu'un rentre
 - Son batterie quand une coiffure est finie
-- Boutons pour le son et la musique
+- Nombre de lettre demandé augmente avec le temps
+- Customer angryness => -20$ en rouge rendez-vous non honoré
+- Beau coiffeur
+- Génération de personnages simples
 
-
-
+Décor :
+Balai, porte, moustache, plante verte
+pied du fauteuil pas en noir
+fioriture sur les miroirs
+les chaises sont moches

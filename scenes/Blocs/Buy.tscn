@@ -5,8 +5,14 @@
 [ext_resource path="res://scenes/Blocs/Money.gd" type="Script" id=3]
 
 [node name="Buy" type="Node2D"]
-position = Vector2( 0, 30 )
+position = Vector2( 0, 125 )
 script = ExtResource( 3 )
+
+[node name="Shadow" type="Sprite" parent="."]
+position = Vector2( 23, 17 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 64, 64 )
 
 [node name="BG" type="Sprite" parent="."]
 texture = ExtResource( 2 )
@@ -15,6 +21,7 @@ region_enabled = true
 region_rect = Rect2( 0, 64, 64, 64 )
 
 [node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 0, -17 )
 scale = Vector2( 1.5, 1.5 )
 
 [node name="Label" parent="Node2D" instance=ExtResource( 1 )]
@@ -22,5 +29,4 @@ margin_left = 4.0
 margin_top = 17.0
 margin_right = 44.0
 margin_bottom = 40.0
-custom_colors/font_color = Color( 0.894118, 0.819608, 0.196078, 1 )
 text = "Buy"

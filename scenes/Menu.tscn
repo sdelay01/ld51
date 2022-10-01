@@ -1,3 +1,66 @@
-[gd_scene format=2]
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/Menu.gd" type="Script" id=1]
+[ext_resource path="res://scenes/Title.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Label.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/ld51.png" type="Texture" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 58, 16 )
 
 [node name="Menu" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Title" parent="." instance=ExtResource( 2 )]
+position = Vector2( 256, 118 )
+scale = Vector2( 2, 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 256, 225 )
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 384, 64, 128, 64 )
+
+[node name="Area2D" type="Area2D" parent="Sprite"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Area2D"]
+position = Vector2( 1, 0 )
+shape = SubResource( 1 )
+
+[node name="Node2D" type="Node2D" parent="Sprite"]
+scale = Vector2( 2, 2 )
+
+[node name="Label" parent="Sprite/Node2D" instance=ExtResource( 3 )]
+margin_left = -15.0
+margin_top = -5.0
+margin_right = 25.0
+margin_bottom = 18.0
+custom_colors/font_color = Color( 0.313726, 0.0941176, 0.0941176, 1 )
+text = "Start"
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 188, 78 )
+scale = Vector2( 1.5, 1.5 )
+
+[node name="Label" parent="Node2D" instance=ExtResource( 3 )]
+margin_left = -0.666656
+margin_top = 54.6667
+margin_right = 112.333
+margin_bottom = 77.6667
+text = "      Ludum Dare 51
+\"Every 10 seconds\""
+
+[node name="GameBy" type="Node2D" parent="."]
+position = Vector2( 163, 172 )
+scale = Vector2( 1.5, 1.5 )
+
+[node name="Label" parent="GameBy" instance=ExtResource( 3 )]
+margin_left = -0.666656
+margin_top = 54.6667
+margin_right = 112.333
+margin_bottom = 77.6667
+text = "A Game by sdelay made in 48h"
+
+[connection signal="input_event" from="Sprite/Area2D" to="." method="_on_start_input_event"]
+[connection signal="mouse_entered" from="Sprite/Area2D" to="." method="_on_start_mouse_entered"]
+[connection signal="mouse_exited" from="Sprite/Area2D" to="." method="_on_start_mouse_exited"]

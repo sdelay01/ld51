@@ -5,11 +5,12 @@
 [ext_resource path="res://scenes/Blocs/Money.gd" type="Script" id=3]
 
 [node name="Money" type="Node2D"]
-position = Vector2( 0, -10 )
+position = Vector2( 0, 40 )
 script = ExtResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Shadow" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.733333 )
+position = Vector2( -9, -16 )
 texture = ExtResource( 2 )
 centered = false
 region_enabled = true
@@ -22,6 +23,7 @@ region_enabled = true
 region_rect = Rect2( 0, 64, 64, 64 )
 
 [node name="Node2D" type="Node2D" parent="."]
+position = Vector2( -3, -17 )
 scale = Vector2( 1.5, 1.5 )
 
 [node name="Label" parent="Node2D" instance=ExtResource( 1 )]
@@ -29,5 +31,4 @@ margin_left = 4.0
 margin_top = 17.0
 margin_right = 44.0
 margin_bottom = 40.0
-custom_colors/font_color = Color( 0.894118, 0.819608, 0.196078, 1 )
 text = "$150"
