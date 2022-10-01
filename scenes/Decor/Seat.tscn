@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/ld51.png" type="Texture" id=1]
+[ext_resource path="res://scenes/Decor/Seat.gd" type="Script" id=2]
+
+[node name="Seat" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 1 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 192, 64, 64, 64 )

@@ -1,0 +1,64 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://assets/ld51.png" type="Texture" id=1]
+[ext_resource path="res://scenes/Customer.gd" type="Script" id=2]
+[ext_resource path="res://assets/simple-pixel.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 128, 256, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 1 )
+region = Rect2( 192, 256, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 256, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 64, 256, 64, 64 )
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "1-seat",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ) ],
+"loop": true,
+"name": "1-chair",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 3 ) ],
+"loop": true,
+"name": "1-walks-out",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "1-walks-in",
+"speed": 5.0
+} ]
+
+[sub_resource type="DynamicFont" id=6]
+size = 8
+font_data = ExtResource( 3 )
+
+[node name="Customer" type="Node2D"]
+scale = Vector2( 2, 2 )
+script = ExtResource( 2 )
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 5 )
+animation = "1-walks-in"
+centered = false
+
+[node name="Label" type="Label" parent="."]
+margin_left = 12.0
+margin_top = 18.5
+margin_right = 52.0
+margin_bottom = 32.5
+custom_fonts/font = SubResource( 6 )
