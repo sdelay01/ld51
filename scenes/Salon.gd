@@ -8,10 +8,12 @@ var Background = preload("res://scenes/Decor/Background.tscn")
 var Chair = preload("res://scenes/Decor/Chair.tscn")
 var Mirror = preload("res://scenes/Decor/Mirror.tscn")
 var Seat = preload("res://scenes/Decor/Seat.tscn")
-var Haircut25 = preload("res://scenes/Decor/Haircut25.tscn")
-var Title = preload("res://scenes/Title.tscn")
 var Overlay = preload("res://scenes/Overlay.tscn")
 var overlay
+
+var Clippers = preload("res://scenes/Blocs/Clippers.tscn")
+var clippersLevel = 0
+
 var Money = preload("res://scenes/Blocs/Money.tscn")
 var money
 var moneyAmount = 100
@@ -40,36 +42,27 @@ var chairs = []
 var seats = []
 var tempObjects = []
 
+var finalObjective = 200
 var objectives = [
 	"first_haircut",
 	"earn_150",
-	"buy_chair",
-	"buy_seat",
-	"buy_cissors_lvl_1",
-	"buy_pole",
-	"earn_1500"
+	"buy_thing",
+	"earn_"+str(finalObjective)
 ]
 var objective = objectives[0]
 
 func _ready():
 	var bg = Background.instance()
 	add_child(bg)
-	var h25 = Haircut25.instance()
-	h25.position = Vector2(290, 50)
-	add_child(h25)
-	
-	var title = Title.instance()
-	title.position = Vector2(200, 30)
-	add_child(title)
 
 	furnitureNode2D = Node2D.new()
 	add_child(furnitureNode2D)
 
 	add_mirror(1, furnitureNode2D)
 	chairs.push_back(add_chair(1, false, furnitureNode2D))
-	#add_chair(2) # TODO when buying
+	add_chair(2, false, furnitureNode2D) # TODO when buying
 	seats.push_back(add_seat(1, false, furnitureNode2D))
-	#add_seat(2) # TODO when buying
+	add_seat(2, false, furnitureNode2D) # TODO when buying
 	
 	eugene = Eugene.instance()
 	add_child(eugene)
@@ -96,10 +89,11 @@ func _ready():
 	
 	open_overlay()
 	#on_ready_to_start()
+	#prepareBuyingArea()
 	#tuto_completed()
 	
 func prepareButtons():
-	var t = ["pause", "sound", "music", "buy"]
+	var t = ["pause", "sound", "music"]
 	var index = 0
 	for butt in t:
 		var button = Setting.instance()
@@ -108,6 +102,18 @@ func prepareButtons():
 		button.connect("click", self, "trigger_" + butt)
 		add_child(button)
 		index += 1
+
+func prepareBuyingArea():
+	var ba = Area2D.new()
+	var cs = CollisionShape2D.new()
+	var ci = CircleShape2D.new()
+	ci.radius = 10
+	cs.shape = ci
+	ba.position = Vector2(40, 168)
+	ba.add_child(cs)
+	ba.connect("area_entered", self, "trigger_buy",  [true])
+	ba.connect("area_exited", self, "trigger_buy", [false])
+	add_child(ba)
 	
 func trigger_pause():
 	if counter and counter.blocked:
@@ -124,13 +130,9 @@ func trigger_sound():
 func trigger_music():
 	emit_signal("toggle_music")
 
-func trigger_buy():
+func trigger_buy(_area, newValue):
+	buyOpen = newValue
 	if buyOpen:
-		overlay.hide()
-		for temp in tempObjects:
-			temp.queue_free()
-		tempObjects = []
-	else:
 		overlay.show()
 		overlay.modulate.a = 0.8
 		print(chairs.size(), " ; ", seats.size())
@@ -139,9 +141,20 @@ func trigger_buy():
 			tempObjects.push_back(add_chair(2, true, furnitureSellNode2D))
 		if seats.size() == 1:
 			tempObjects.push_back(add_seat(2, true, furnitureSellNode2D))
-	buyOpen = !buyOpen
-	
+		if clippersLevel < 3:
+			tempObjects.push_back(add_clippers(clippersLevel + 1, furnitureSellNode2D))
+		
+		
+	else:
+		overlay.hide()
+		for temp in tempObjects:
+			temp.queue_free()
+		tempObjects = []
+
 func open_overlay():
+	print("open")
+	overlay.modulate.a = 1
+	overlay.show()
 	var tween = Tween.new()
 	add_child(tween)
 	tween.interpolate_property(overlay, "modulate",
@@ -151,6 +164,7 @@ func open_overlay():
 	tween.start()
 	
 func on_ready_to_start():
+	print("on ready")
 	overlay.hide()
 	bulle.displayText([
 		"Welcome to the haidressing salon     (click to continue)",
@@ -181,8 +195,11 @@ func add_customer():
 	c.connect("cut_done", self, "on_cut_done")
 	customers.push_back(c)
 	customersNode.add_child(c)
-	c.init(self, 5)
-	
+	if clippersLevel == 0:
+		c.init(self, 5)
+	else:
+		c.init(self, 5 - (2 * clippersLevel - 1))
+
 func on_cut_done(_posX, _customer):
 	customers.erase(_customer)
 	if objective == "first_haircut":
@@ -202,17 +219,30 @@ func on_cut_done(_posX, _customer):
 		pause()
 		bulle.displayText([
 			"You've earned $150, good!        ",
-			"With that money, buy a new chair."
+			"With that money, buy something the improve the salon.",
+			"To do so, get close to your vending machine,",
+			"And click on what you want to buy.",
 		])
+		
 		bulle.connect("text_done", self, "obj_earn_150")
 
+	if moneyAmount >= finalObjective and objective == "earn_"+str(finalObjective):
+		pause()
+		bulle.displayText([
+			"Brilliant! You can go your vacations!",
+			"I can close this salon!",
+			"Thank you for playing."
+		])
+		bulle.connect("text_done", self, "obj_buy_thing") # TODO
+				
 func obj_first_haircut():
 	unpause()
 	objective = "earn_150"
 
 func obj_earn_150():
 	unpause()
-	objective = "buy_chair"
+	prepareBuyingArea()
+	objective = "buy_thing"
 
 func pause():
 	eugene.blocked = true
@@ -239,7 +269,7 @@ func get_next_seat():
 func add_chair(_rank, _withPriceTag, _parent):
 	var c = Chair.instance()
 	_parent.add_child(c)
-	c.position = Vector2(_rank * 120 - 100, 120)
+	c.position = Vector2(_rank * 110 - 36, 120)
 	if _withPriceTag:
 		var priceTag = add_price_tag(150, Vector2(0,0), "chair", Vector2(_rank * 120 - 100, 120))
 		c.add_child(priceTag)
@@ -248,12 +278,12 @@ func add_chair(_rank, _withPriceTag, _parent):
 func add_mirror(_rank, _parent):
 	var m = Mirror.instance()
 	_parent.add_child(m)
-	m.position = Vector2(_rank * 120 - 100, 60)
+	m.position = Vector2(_rank * 110 - 36, 60)
 	return m
 
 func add_seat(_rank, _withPriceTag, _parent):
 	var s = Seat.instance()
-	s.position = Vector2(160 + _rank * 64, 100)
+	s.position = Vector2(224 + _rank * 64, 100)
 	_parent.add_child(s)
 	if _withPriceTag:
 		var priceTag = add_price_tag(100, Vector2(0,0), "seat", Vector2(160 + _rank * 64, 100))
@@ -291,22 +321,44 @@ func add_price_tag(_price, _pos, _type, _objectPos):
 	n2.position = _pos
 	return n2
 
+func add_clippers(_level, _parent):
+	var clippers = Clippers.instance()
+	clippers.position = Vector2(330, 230)
+	clippers.init(_level)
+	_parent.add_child(clippers)
+	clippers.connect("input_event", self, "on_click_buy", ["clippers", clippers.price, clippers.position])
+	return clippers
+	
+
 func on_click_buy(_viewport, event, _shape_idx, _type, _price, _objectPos):
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
 		if moneyAmount >= _price:
 			displayAmountBriefly("- $" + str(_price), Color(1, 1, 1, 1), _objectPos)
 			moneyAmount -= _price
 			money.setAmount(moneyAmount)
-			trigger_buy()
+			trigger_buy(null, false)
 			if _type == "seat":
 				seats.push_back(add_seat(2, false, furnitureNode2D))
 			if _type == "chair":
 				add_mirror(2, furnitureNode2D)
 				chairs.push_back(add_chair(2, false, furnitureNode2D))
+			if _type == "clippers":
+				clippersLevel += 1
+			if objective == "buy_thing":
+				pause()
+				bulle.displayText([
+					"Brilliant! Now you know everything to run the salon.",
+					"Let's earn $"+str(finalObjective)+" to finally pay you a cruise Vacation!",
+				])
+				bulle.connect("text_done", self, "obj_buy_thing")
 		else:
 			displayAmountBriefly("Not enough money!", Color(1, 1, 1, 1), _objectPos)
-			trigger_buy()
-			
+			trigger_buy(null, false)
+
+func obj_buy_thing():
+	unpause()
+	objective = "earn_"+str(finalObjective)
+	
 func displayAmountBriefly(_text, _color, _objectPos):
 	var n2 = Node2D.new()
 	var l = CustomLabel.instance()

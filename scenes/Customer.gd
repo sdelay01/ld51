@@ -35,13 +35,14 @@ func init(_salon, _actions_needed):
 
 func setString():
 	var string = ""
-	for _i in range(5):
+	for _i in range(actions_needed):
 		var rng = RandomNumberGenerator.new()
 		rng.randomize()
 		var strIndex = rng.randi_range(0, 25)
 		string += alphabet[strIndex]
 	actions = string
-	actions = "AZERT" # todo REMOVE THIS
+	print(actions_needed, "String is ", string)
+	#actions = "AZERT" # todo REMOVE THIS
 	
 func find_target():
 	var nextChair = salon.get_next_chair()
@@ -70,7 +71,6 @@ func pressLetter(letter):
 		actions_done += 1
 		if actions_done == actions_needed:
 			emit_signal("cut_done", position.x, self)
-			print("cut_done customer")
 			action = "walks_out"
 			toward.setFree(true)
 			toward.setCustomer(null)

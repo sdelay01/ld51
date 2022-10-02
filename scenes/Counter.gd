@@ -11,6 +11,6 @@ func _process(delta):
 	if blocked: return
 	seconds += delta
 	$Label.text = str(int(seconds))
-	if seconds >= 8:
+	if seconds >= 4:
 		emit_signal("timeout")
 		seconds = 0.0

@@ -66,11 +66,12 @@ X Pause + Overlay
 X Bouton Son On/Off
 X Bouton Musique On/Off
 X Buy things
-- réduire la vite et agrandire le salon
-- Buy things en se rapprochant de la caisse, toggle en s'éloignant
-- Missions achat fauteuil
-- Mission achat tondeuse
+X réduire la vite et agrandire le salon
+X Buy things en se rapprochant de la caisse, toggle en s'éloignant
+X Tondeuse
+X Missions
 - Bug de seat et de walks, un seul place pour angry
+
 - Bug un truc vide pour deux personnes au même moment
 - Sons
   - Son tondeuse
@@ -83,7 +84,7 @@ X Buy things
 - La rue
 
 Décor :
-Balai, porte, moustache, plante verte
+Balai, porte, moustache, plante verte, paillason
 pied du fauteuil pas en noir
 fioriture sur les miroirs
 les chaises sont moches

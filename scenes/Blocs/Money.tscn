@@ -1,34 +1,16 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scenes/Label.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/ld51.png" type="Texture" id=2]
 [ext_resource path="res://scenes/Blocs/Money.gd" type="Script" id=3]
 
 [node name="Money" type="Node2D"]
-position = Vector2( 0, 165 )
+position = Vector2( 33, 153 )
+scale = Vector2( 0.5, 0.5 )
 script = ExtResource( 3 )
 
-[node name="Shadow" type="Sprite" parent="."]
-modulate = Color( 1, 1, 1, 0.733333 )
-position = Vector2( -9, -16 )
-texture = ExtResource( 2 )
-centered = false
-region_enabled = true
-region_rect = Rect2( 0, 0, 64, 64 )
-
-[node name="BG" type="Sprite" parent="."]
-texture = ExtResource( 2 )
-centered = false
-region_enabled = true
-region_rect = Rect2( 0, 64, 64, 64 )
-
-[node name="Node2D" type="Node2D" parent="."]
-position = Vector2( -3, -17 )
-scale = Vector2( 1.5, 1.5 )
-
-[node name="Label" parent="Node2D" instance=ExtResource( 1 )]
-margin_left = 4.0
-margin_top = 17.0
-margin_right = 44.0
-margin_bottom = 40.0
+[node name="Label" parent="." instance=ExtResource( 1 )]
+margin_left = 2.0
+margin_top = 8.5
+margin_right = 42.0
+margin_bottom = 31.5
 text = "$150"
