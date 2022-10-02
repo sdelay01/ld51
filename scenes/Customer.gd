@@ -20,6 +20,7 @@ var nextAction
 var waiting = 0
 var persona = 1
 var isReady = false
+var blocked = false
 
 func _ready():
 	position = Vector2(400, lineY)
@@ -69,6 +70,7 @@ func pressLetter(letter):
 		actions_done += 1
 		if actions_done == actions_needed:
 			emit_signal("cut_done", position.x, self)
+			print("cut_done customer")
 			action = "walks_out"
 			toward.setFree(true)
 			toward.setCustomer(null)
@@ -87,6 +89,7 @@ func hideLetter():
 
 func _process(delta):
 	if !isReady: return
+	if blocked: return
 	$Label.text = action
 	$Sprite.play(str(persona) + "-" + action)
 	if action == "walks_in":

@@ -39,6 +39,7 @@ func _input(event):
 		
 func _on_area_entered(area):
 	var workingChair = area.get_parent()
+	if workingChair.name != "Chair": return
 	workingChair.eugenePresent = self
 	if workingChair.customer:
 		currentCustomer = workingChair.customer
@@ -46,6 +47,7 @@ func _on_area_entered(area):
 
 func _on_area_exited(area):
 	var workingChair = area.get_parent()
+	if workingChair.name != "Chair": return
 	workingChair.eugenePresent = null
 	if workingChair.customer:
 		currentCustomer = null

@@ -29,13 +29,13 @@ Comment on perd ? On ne perd pas, mais on retarde le quand on gagne
 Comment on gagne ?
   - Obtenir 1500$ pour s'acheter un bateau et une retraite en mer : écran de fin, congrats !
   - Objectifs intermédiaires affiché en haut à gauche
-    - Wait 10 seconds for the first customer
-    - Make a haircut
-    - Earn 150$
-    - Buy a new seat
+    X Wait 10 seconds for the first customer
+    X Make a haircut
+    X Earn 150$
+    X Buy a new seat
     - Buy a new cissors
     - Buy a beard Pole
-    - Buy a new chair
+    X Buy a new chair
     - Earn 1500$ to pay for a cruise vacation
     - End of the game
 
@@ -62,18 +62,25 @@ X Text
 X Tuto
 X Missions
 X Musique de fond
-- Pause + Overlay
+X Pause + Overlay
 X Bouton Son On/Off
 X Bouton Musique On/Off
-- Buy things WIP
+X Buy things
+- réduire la vite et agrandire le salon
+- Buy things en se rapprochant de la caisse, toggle en s'éloignant
+- Missions achat fauteuil
+- Mission achat tondeuse
 - Bug de seat et de walks, un seul place pour angry
-- Son tondeuse
-- Son clochette quand quelqu'un rentre
-- Son batterie quand une coiffure est finie pour in the hair tonight
+- Bug un truc vide pour deux personnes au même moment
+- Sons
+  - Son tondeuse
+  - Son clochette quand quelqu'un rentre
+  - Son batterie quand une coiffure est finie pour in the hair tonight
 - le Nombre de lettre demandé augmente avec le temps
 - Customer angryness => -20$ en rouge rendez-vous non honoré
 - Beau coiffeur
 - Génération de personnages simples
+- La rue
 
 Décor :
 Balai, porte, moustache, plante verte

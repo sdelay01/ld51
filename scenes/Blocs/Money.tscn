@@ -5,7 +5,7 @@
 [ext_resource path="res://scenes/Blocs/Money.gd" type="Script" id=3]
 
 [node name="Money" type="Node2D"]
-position = Vector2( 0, 40 )
+position = Vector2( 0, 165 )
 script = ExtResource( 3 )
 
 [node name="Shadow" type="Sprite" parent="."]
