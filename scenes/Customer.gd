@@ -22,6 +22,8 @@ var persona = 1
 var isReady = false
 var blocked = false
 
+var availableIndex = null
+
 func _ready():
 	position = Vector2(400, lineY)
 	persona = 1
@@ -41,22 +43,18 @@ func setString():
 		var strIndex = rng.randi_range(0, 25)
 		string += alphabet[strIndex]
 	actions = string
-	print(actions_needed, "String is ", string)
-	#actions = "AZERT" # todo REMOVE THIS
+	actions = "AZERT" # todo REMOVE THIS
 	
 func find_target():
-	var nextChair = salon.get_next_chair()
-	if nextChair:
-		if toward:
-			toward.setFree(true)
-			toward.setCustomer(null)
-		set_target(nextChair, "walks_in", "chair")
+	var res = salon.whats_my_target(self)
+	if res:
+		toward = res[0]
+		action = "walks_in"
+		nextAction = res[1]
+		print("assignatin", self, res[2])
+		availableIndex = res[2]
 		return
-	var nextSeat = salon.get_next_seat()
-	if nextSeat:
-		set_target(nextSeat, "walks_in", "seat")
-		return
-
+		
 	if action == "walks_in":
 		action = "angry"
 
@@ -103,7 +101,7 @@ func _process(delta):
 		
 	if action == "seat":
 		waiting += delta
-		if waiting > 1:
+		if waiting > 0.3:
 			find_target()
 			waiting = 0
 		
@@ -114,6 +112,6 @@ func _process(delta):
 		
 	if action == "angry":
 		waiting += delta
-		if waiting > 1:
+		if waiting > 0.3:
 			find_target()
 			waiting = 0

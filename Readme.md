@@ -70,15 +70,18 @@ X réduire la vite et agrandire le salon
 X Buy things en se rapprochant de la caisse, toggle en s'éloignant
 X Tondeuse
 X Missions
-- Bug de seat et de walks, un seul place pour angry
-
-- Bug un truc vide pour deux personnes au même moment
+X Bug de seat et de walks, un seul place pour angry
+X Bug un truc vide pour deux personnes au même moment
+- Customer angryness => -20$ en rouge rendez-vous non honoré
 - Sons
   - Son tondeuse
+  - Son ting appuie sur une bonne touche
   - Son clochette quand quelqu'un rentre
   - Son batterie quand une coiffure est finie pour in the hair tonight
+
+- Beau compteur
 - le Nombre de lettre demandé augmente avec le temps
-- Customer angryness => -20$ en rouge rendez-vous non honoré
+
 - Beau coiffeur
 - Génération de personnages simples
 - La rue

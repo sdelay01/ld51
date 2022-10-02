@@ -16,7 +16,7 @@ var clippersLevel = 0
 
 var Money = preload("res://scenes/Blocs/Money.tscn")
 var money
-var moneyAmount = 100
+var moneyAmount = 400
 
 var CustomLabel = preload("res://scenes/Label.tscn")
 
@@ -38,8 +38,13 @@ var bulle
 
 var furnitureNode2D # Node2D for all seats and chairs and mirrors
 var furnitureSellNode2D
-var chairs = []
-var seats = []
+var nbChairs = 1
+var nbSeats = 1
+
+var availability = []
+var objects = []
+var mutex
+
 var tempObjects = []
 
 var finalObjective = 200
@@ -49,9 +54,10 @@ var objectives = [
 	"buy_thing",
 	"earn_"+str(finalObjective)
 ]
-var objective = objectives[0]
+var objective = "nop" #objectives[0] # TODO ne pas oublier ça
 
 func _ready():
+	mutex = Mutex.new()
 	var bg = Background.instance()
 	add_child(bg)
 
@@ -59,10 +65,12 @@ func _ready():
 	add_child(furnitureNode2D)
 
 	add_mirror(1, furnitureNode2D)
-	chairs.push_back(add_chair(1, false, furnitureNode2D))
-	add_chair(2, false, furnitureNode2D) # TODO when buying
-	seats.push_back(add_seat(1, false, furnitureNode2D))
-	add_seat(2, false, furnitureNode2D) # TODO when buying
+	add_mirror(2, furnitureNode2D)
+	
+	var chair1 = add_chair(1, false, furnitureNode2D)
+	var seat1 = add_seat(1, false, furnitureNode2D)
+	availability = [1, 1]
+	objects = [chair1, seat1]
 	
 	eugene = Eugene.instance()
 	add_child(eugene)
@@ -87,11 +95,29 @@ func _ready():
 	furnitureSellNode2D = Node2D.new()
 	add_child(furnitureSellNode2D)
 	
-	open_overlay()
+	#open_overlay()
 	#on_ready_to_start()
-	#prepareBuyingArea()
-	#tuto_completed()
+	prepareBuyingArea()
+	tuto_completed()
 	
+func whats_my_target(_customer):
+	var index = 0
+	mutex.lock()
+	for available in availability:
+		if _customer.availableIndex != null:
+			if _customer.availableIndex < index: return
+		if available == 1:
+			var object = objects[index]
+			var name = "chair"
+			if object.name.find("Chair") == -1: name = "seat"
+			availability[index] = 0
+			if _customer.availableIndex != null: availability[_customer.availableIndex] = 1
+			mutex.unlock()
+			return [object, name, index]
+		index += 1
+	mutex.unlock()
+	return false
+
 func prepareButtons():
 	var t = ["pause", "sound", "music"]
 	var index = 0
@@ -133,26 +159,27 @@ func trigger_music():
 func trigger_buy(_area, newValue):
 	buyOpen = newValue
 	if buyOpen:
+		pause()
+		eugene.blocked = false
 		overlay.show()
 		overlay.modulate.a = 0.8
-		print(chairs.size(), " ; ", seats.size())
-		if chairs.size() == 1:
+		if nbChairs == 1:
 			tempObjects.push_back(add_mirror(2, furnitureSellNode2D))
 			tempObjects.push_back(add_chair(2, true, furnitureSellNode2D))
-		if seats.size() == 1:
+		if nbSeats == 1:
 			tempObjects.push_back(add_seat(2, true, furnitureSellNode2D))
 		if clippersLevel < 3:
 			tempObjects.push_back(add_clippers(clippersLevel + 1, furnitureSellNode2D))
-		
-		
 	else:
+		unpause()
 		overlay.hide()
 		for temp in tempObjects:
-			temp.queue_free()
+			call_deferred("removeBuyingObjects", temp)
 		tempObjects = []
 
+func removeBuyingObjects(_temp):
+	_temp.queue_free()
 func open_overlay():
-	print("open")
 	overlay.modulate.a = 1
 	overlay.show()
 	var tween = Tween.new()
@@ -164,7 +191,6 @@ func open_overlay():
 	tween.start()
 	
 func on_ready_to_start():
-	print("on ready")
 	overlay.hide()
 	bulle.displayText([
 		"Welcome to the haidressing salon     (click to continue)",
@@ -183,6 +209,7 @@ func tuto_completed():
 	counter.connect("timeout", self, "on_counter_timeout")
 	counter.position = Vector2(400, 200)
 	add_child(counter)
+	print("tuto completed")
 	add_customer()
 	prepareButtons()
 
@@ -190,7 +217,12 @@ func on_counter_timeout():
 	add_customer()
 
 func add_customer():
-	if customers.size() >= 4: return
+	for cu in customers:
+		if cu.action == "angry":
+			displayAmountBriefly("Salon full! - $20", Color(1, 1, 1, 1), Vector2(300, 300))
+			moneyAmount -= 20
+			money.setAmount(moneyAmount)
+			return 
 	var c = Customer.instance()
 	c.connect("cut_done", self, "on_cut_done")
 	customers.push_back(c)
@@ -201,6 +233,7 @@ func add_customer():
 		c.init(self, 5 - (2 * clippersLevel - 1))
 
 func on_cut_done(_posX, _customer):
+	availability[_customer.availableIndex] = 1
 	customers.erase(_customer)
 	if objective == "first_haircut":
 		pause()
@@ -255,16 +288,6 @@ func unpause():
 	counter.blocked = false
 	for c in customers:
 		c.blocked = false
-
-func get_next_chair():
-	for c in chairs:
-		if c.isFree: return c
-	return false
-
-func get_next_seat():
-	for s in seats:
-		if s.isFree: return s
-	return false
 
 func add_chair(_rank, _withPriceTag, _parent):
 	var c = Chair.instance()
@@ -328,7 +351,6 @@ func add_clippers(_level, _parent):
 	_parent.add_child(clippers)
 	clippers.connect("input_event", self, "on_click_buy", ["clippers", clippers.price, clippers.position])
 	return clippers
-	
 
 func on_click_buy(_viewport, event, _shape_idx, _type, _price, _objectPos):
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
@@ -338,10 +360,23 @@ func on_click_buy(_viewport, event, _shape_idx, _type, _price, _objectPos):
 			money.setAmount(moneyAmount)
 			trigger_buy(null, false)
 			if _type == "seat":
-				seats.push_back(add_seat(2, false, furnitureNode2D))
+				var s = add_seat(2, false, furnitureNode2D)
+				nbSeats += 1
+				mutex.lock()
+				objects.push_back(s)
+				availability.push_back(1)
+				mutex.unlock()
 			if _type == "chair":
 				add_mirror(2, furnitureNode2D)
-				chairs.push_back(add_chair(2, false, furnitureNode2D))
+				var c = add_chair(2, false, furnitureNode2D)
+				nbChairs += 1
+				mutex.lock()
+				objects.insert(1, c)
+				availability.insert(1, 1)
+				for cu in customers:
+					if cu.availableIndex != null and cu.availableIndex >= 1:
+						cu.availableIndex += 1
+				mutex.unlock()
 			if _type == "clippers":
 				clippersLevel += 1
 			if objective == "buy_thing":
@@ -367,7 +402,6 @@ func displayAmountBriefly(_text, _color, _objectPos):
 	add_child(n2)
 	l.text = _text
 	n2.scale = Vector2(1.5, 1.5)
-	print("posX", _objectPos)
 	var tween = Tween.new()
 	tween.interpolate_property(n2, "modulate",
 		Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.5,
@@ -375,5 +409,9 @@ func displayAmountBriefly(_text, _color, _objectPos):
 	tween.interpolate_property(n2, "position",
 		_objectPos, _objectPos + Vector2(0, -20), 1.5,
 		Tween.TRANS_QUART, Tween.EASE_IN)
-	add_child(tween)
+	n2.add_child(tween)
+	tween.connect("tween_all_completed", self, "remove_brief_display", [n2])
 	tween.start()
+	
+func remove_brief_display(node2d):
+	node2d.queue_free()
