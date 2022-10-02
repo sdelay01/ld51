@@ -87,6 +87,9 @@ Obligatoires
 - Compiler
 
 
+Test joueur : 
+- Rajouter overlay avec la bulle
+
 Décor :
 
 - La rue

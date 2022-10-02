@@ -16,7 +16,7 @@ var clippersLevel = 0
 
 var Money = preload("res://scenes/Blocs/Money.tscn")
 var money
-var moneyAmount = 400
+var moneyAmount = 75
 
 var CustomLabel = preload("res://scenes/Label.tscn")
 
@@ -56,7 +56,7 @@ var objectives = [
 	"buy_thing",
 	"earn_"+str(finalObjective)
 ]
-var objective = "nop" #objectives[0] # TODO ne pas oublier ça
+var objective = objectives[0] # TODO ne pas oublier ça
 
 func _ready():
 	mutex = Mutex.new()
@@ -83,22 +83,22 @@ func _ready():
 
 	customersNode = Node2D.new()
 	add_child(customersNode)
-	
-	bulle = Bulle.instance()
-	bulle.position = Vector2(256, 280)
-	add_child(bulle)
 
 	overlay = Overlay.instance()
 	add_child(overlay)
 	overlay.hide()
 	
+	bulle = Bulle.instance()
+	bulle.position = Vector2(256, 280)
+	add_child(bulle)
+
 	furnitureSellNode2D = Node2D.new()
 	add_child(furnitureSellNode2D)
 	
-	#open_overlay()
+	open_overlay()
 	#on_ready_to_start()
-	prepareBuyingArea()
-	tuto_completed()
+	#prepareBuyingArea()
+	#tuto_completed()
 	
 func whats_my_target(_customer):
 	var index = 0
@@ -196,9 +196,14 @@ func open_overlay():
 	tween.connect("tween_all_completed", self, "on_ready_to_start")
 	tween.start()
 	
+func bulleSpeech(texts, callback):
+	overlay.show()
+	overlay.modulate.a = 0.7
+	bulle.displayText(texts)
+	bulle.connect("text_done", self, callback)
+		
 func on_ready_to_start():
-	overlay.hide()
-	bulle.displayText([
+	bulleSpeech([
 		"Welcome to the haidressing salon     (click to continue)",
 		"Use left and right arrows to move",
 		"A customer is entering every 10 seconds.",
@@ -206,10 +211,10 @@ func on_ready_to_start():
 		"Then press the displayed keys to make the haircut,",
 		"Don't make your customers wait !",
 		"Good luck !                           "
-	])
-	bulle.connect("text_done", self, "tuto_completed")
+	], "tuto_completed")
 
 func tuto_completed():
+	overlay.hide()
 	bulle.disconnect("text_done", self, "tuto_completed")
 	counter = Counter.instance()
 	counter.connect("timeout", self, "on_counter_timeout")
@@ -248,11 +253,10 @@ func on_cut_done(_posX, _customer):
 	customers.erase(_customer)
 	if objective == "first_haircut":
 		pause()
-		bulle.displayText([
+		bulleSpeech([
 			"You've made your first haircut, Good !",
 			"Your next objective is to earn 150$"
-		])
-		bulle.connect("text_done", self, "obj_first_haircut")
+		], "obj_first_haircut")
 
 	moneyAmount += 25
 	money.setAmount(moneyAmount)
@@ -261,30 +265,29 @@ func on_cut_done(_posX, _customer):
 
 	if objective == "earn_150" and moneyAmount >= 150:
 		pause()
-		bulle.displayText([
+		bulleSpeech([
 			"You've earned $150, good!        ",
 			"With that money, buy something the improve the salon.",
 			"To do so, get close to your vending machine,",
 			"And click on what you want to buy.",
-		])
-		
-		bulle.connect("text_done", self, "obj_earn_150")
+		], "obj_earn_150")
 
 	if moneyAmount >= finalObjective and objective == "earn_"+str(finalObjective):
 		pause()
-		bulle.displayText([
+		bulleSpeech([
 			"Brilliant! You can go your vacations!",
 			"I can close this salon!",
 			"Thank you for playing."
-		])
-		bulle.connect("text_done", self, "obj_buy_thing") # TODO
+		], "obj_buy_thing")
 				
 func obj_first_haircut():
 	unpause()
+	overlay.hide()
 	objective = "earn_150"
 
 func obj_earn_150():
 	unpause()
+	overlay.hide()
 	prepareBuyingArea()
 	objective = "buy_thing"
 
@@ -392,17 +395,17 @@ func on_click_buy(_viewport, event, _shape_idx, _type, _price, _objectPos):
 				clippersLevel += 1
 			if objective == "buy_thing":
 				pause()
-				bulle.displayText([
+				bulleSpeech([
 					"Brilliant! Now you know everything to run the salon.",
 					"Let's earn $"+str(finalObjective)+" to finally pay you a cruise Vacation!",
-				])
-				bulle.connect("text_done", self, "obj_buy_thing")
+				], "obj_buy_thing")
 		else:
 			displayAmountBriefly("Not enough money!", Color(1, 1, 1, 1), _objectPos)
 			trigger_buy(null, false)
 
 func obj_buy_thing():
 	unpause()
+	overlay.hide()
 	objective = "earn_"+str(finalObjective)
 	
 func displayAmountBriefly(_text, _color, _objectPos):
