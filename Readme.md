@@ -76,19 +76,14 @@ X Sons
 X Son tings appuie sur une bonne touche
 X Son cut_done
 X Son on/off
-  
-Obligatoires
-- Customer angryness => -20$ en rouge rendez-vous non honoré
-- Beau compteur
+X Customer angryness => -20$
+X Beau compteur
+X Son au nouveau client MADAME BONJOUR
 - le Nombre de lettre demandé augmente avec le temps
-- Beau coiffeur
-- Génération de personnages simples
-- les todos
+X Beau coiffeur
+X Génération de personnages simples
+- les todos dans le code
 - Compiler
-
-
-Test joueur : 
-- Rajouter overlay avec la bulle
 
 Décor :
 

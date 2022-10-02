@@ -138,11 +138,11 @@ texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 64, 0, 64, 64 )
 
+[node name="Title" parent="." instance=ExtResource( 1 )]
+position = Vector2( 208, 24 )
+
 [node name="Affiche" type="Sprite" parent="."]
-position = Vector2( 377, 63 )
+position = Vector2( 354, 63 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 64, 64, 64, 64 )
-
-[node name="Title" parent="Affiche" instance=ExtResource( 1 )]
-position = Vector2( -169, -39 )

@@ -2,7 +2,7 @@ extends Node2D
 
 signal cut_done(positionX, customer)
 signal play_note(number)
-export (int) var speed = 300 #80
+export (int) var speed = 80
 
 var Key = preload("res://scenes/Key.tscn")
 var key
@@ -19,15 +19,28 @@ var lineY = 160
 var towardAction
 var nextAction
 var waiting = 0
-var persona = 1
 var isReady = false
 var blocked = false
 
+var hairIndex
 var availableIndex = null
 
 func _ready():
 	position = Vector2(400, lineY)
-	persona = 1
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	
+	hairIndex = rng.randi_range(1, 5)
+	$HairFront.play(str(hairIndex))
+	$HairBack.play(str(hairIndex))
+	$HairBack.hide()
+	rng.randomize()
+	$Head.play(str(rng.randi_range(1, 5)))
+	rng.randomize()
+	$BodyBottom.play(str(rng.randi_range(1, 5)))
+	rng.randomize()
+	$BodyTop.play(str(rng.randi_range(1, 5)))
+	
 	setString()
 
 func init(_salon, _actions_needed):
@@ -71,7 +84,6 @@ func pressLetter(letter):
 		if actions_done == actions_needed:
 			emit_signal("cut_done", position.x, self)
 			action = "walks_out"
-			toward.setFree(true)
 			toward.setCustomer(null)
 			return
 		displayLetter()
@@ -90,13 +102,27 @@ func _process(delta):
 	if !isReady: return
 	if blocked: return
 	$Label.text = action
-	$Sprite.play(str(persona) + "-" + action)
+	if action == "chair":
+		$Head.hide()
+		$HairFront.hide()
+		$HairBack.show()
+		$BodyBottom.hide()
+		$BodyTop.hide()
+	else:
+		$Head.show()
+		$HairFront.show()
+		$HairBack.hide()
+		$BodyBottom.show()
+		$BodyTop.show()
+
+	if action == "walks_out":
+		$HairFront.hide()
+
 	if action == "walks_in":
 		position.y = lineY
 		position.x -= delta * speed
-		if position.x - toward.position.x < 5:
+		if position.x - toward.position.x < 2:
 			action = nextAction
-			toward.setFree(false)
 			toward.setCustomer(self)
 			position.y = toward.position.y
 		

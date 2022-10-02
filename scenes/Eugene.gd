@@ -24,11 +24,13 @@ func _physics_process(_delta):
 	if position.x < 50: position.x = 50
 	if position.x > 400 : position.x = 400
 
+	
 	if velocity.x != 0:
-		$Sprite.play("default")
+		$Sprite.play("side")
 		$Sprite.flip_h = velocity.x < 0
 	else:
-		$Sprite.play("default")
+		$Sprite.play("idle")
+	if currentCustomer: $Sprite.play("cut")
 
 func _input(event):
 	if blocked: return

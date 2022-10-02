@@ -56,7 +56,7 @@ var objectives = [
 	"buy_thing",
 	"earn_"+str(finalObjective)
 ]
-var objective = objectives[0] # TODO ne pas oublier ça
+var objective = "nope" #objectives[0] # TODO ne pas oublier ça
 
 func _ready():
 	mutex = Mutex.new()
@@ -95,10 +95,10 @@ func _ready():
 	furnitureSellNode2D = Node2D.new()
 	add_child(furnitureSellNode2D)
 	
-	open_overlay()
+	#open_overlay()
 	#on_ready_to_start()
-	#prepareBuyingArea()
-	#tuto_completed()
+	prepareBuyingArea()
+	tuto_completed()
 	
 func whats_my_target(_customer):
 	var index = 0
@@ -218,7 +218,7 @@ func tuto_completed():
 	bulle.disconnect("text_done", self, "tuto_completed")
 	counter = Counter.instance()
 	counter.connect("timeout", self, "on_counter_timeout")
-	counter.position = Vector2(400, 200)
+	counter.position = Vector2(420, 30)
 	add_child(counter)
 	add_customer()
 	prepareButtons()
@@ -229,11 +229,13 @@ func on_counter_timeout():
 func add_customer():
 	for cu in customers:
 		if cu.action == "angry":
-			displayAmountBriefly("Salon full! - $20", Color(1, 1, 1, 1), Vector2(300, 300)) # TODO this le placer
+			displayAmountBriefly("Salon  is  full!", Color(1, 1, 1, 1), Vector2(350, 100))
+			displayAmountBriefly("-$20", Color(1, 1, 1, 1), Vector2(385, 120))
 			if soundOn: $Sounds/CustomerLeaving.play()
 			moneyAmount -= 20
 			money.setAmount(moneyAmount)
 			return 
+	if soundOn: $Sounds/MadameBonjour.play()
 	var c = Customer.instance()
 	c.connect("cut_done", self, "on_cut_done")
 	c.connect("play_note", self, "on_play_note")
@@ -409,22 +411,22 @@ func obj_buy_thing():
 	objective = "earn_"+str(finalObjective)
 	
 func displayAmountBriefly(_text, _color, _objectPos):
-	var n2 = Node2D.new()
-	var l = CustomLabel.instance()
-	l.modulate = _color
-	n2.add_child(l)
-	add_child(n2)
-	l.text = _text
-	n2.scale = Vector2(1.5, 1.5)
+	var node2d = Node2D.new()
+	var lab = CustomLabel.instance()
+	lab.modulate = _color
+	lab.text = _text
+	node2d.add_child(lab)
+	node2d.scale = Vector2(1.5, 1.5)
 	var tween = Tween.new()
-	tween.interpolate_property(n2, "modulate",
+	tween.interpolate_property(node2d, "modulate",
 		Color(1, 1, 1, 1), Color(1, 1, 1, 0), 1.5,
 		Tween.TRANS_QUART, Tween.EASE_IN)
-	tween.interpolate_property(n2, "position",
+	tween.interpolate_property(node2d, "position",
 		_objectPos, _objectPos + Vector2(0, -20), 1.5,
 		Tween.TRANS_QUART, Tween.EASE_IN)
-	n2.add_child(tween)
-	tween.connect("tween_all_completed", self, "remove_brief_display", [n2])
+	node2d.add_child(tween)
+	tween.connect("tween_all_completed", self, "remove_brief_display", [node2d])
+	add_child(node2d)
 	tween.start()
 	
 func remove_brief_display(node2d):
