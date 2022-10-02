@@ -52,10 +52,10 @@ func init(_salon, _actions_needed):
 
 func setString():
 	var string = ""
+	var rng = RandomNumberGenerator.new()
 	for _i in range(actions_needed):
-		var rng = RandomNumberGenerator.new()
 		rng.randomize()
-		var strIndex = rng.randi_range(0, 25)
+		var strIndex = rng.randi_range(0, 578) % 25
 		string += alphabet[strIndex]
 	actions = string
 	
