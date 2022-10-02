@@ -15,7 +15,7 @@ var actions = ""
 const alphabet = "AZERTYUIOPMLKJHGFDSQWXCVBN"
 var salon
 var toward
-var lineY = 160
+var lineY = 140
 var towardAction
 var nextAction
 var waiting = 0
@@ -23,6 +23,7 @@ var isReady = false
 var blocked = false
 
 var hairIndex
+var headIndex
 var availableIndex = null
 
 func _ready():
@@ -35,17 +36,17 @@ func _ready():
 	$HairBack.play(str(hairIndex))
 	$HairBack.hide()
 	rng.randomize()
-	$Head.play(str(rng.randi_range(1, 5)))
+	headIndex = rng.randi_range(1, 5)
+	$Head.play(str(headIndex))
 	rng.randomize()
 	$BodyBottom.play(str(rng.randi_range(1, 5)))
 	rng.randomize()
 	$BodyTop.play(str(rng.randi_range(1, 5)))
-	
-	setString()
 
 func init(_salon, _actions_needed):
 	salon = _salon
 	actions_needed = _actions_needed
+	setString()
 	find_target()
 	isReady = true
 
@@ -57,7 +58,6 @@ func setString():
 		var strIndex = rng.randi_range(0, 25)
 		string += alphabet[strIndex]
 	actions = string
-	actions = "AZERT" # todo REMOVE THIS
 	
 func find_target():
 	var res = salon.whats_my_target(self)
@@ -117,7 +117,10 @@ func _process(delta):
 
 	if action == "walks_out":
 		$HairFront.hide()
-
+	
+	if action == "angry": $Head.play(str(headIndex) + "_angry")
+	else: $Head.play(str(headIndex))
+	
 	if action == "walks_in":
 		position.y = lineY
 		position.x -= delta * speed

@@ -49,14 +49,14 @@ var soundOn = true
 
 var tempObjects = []
 
-var finalObjective = 200
+var finalObjective = 250
 var objectives = [
 	"first_haircut",
 	"earn_150",
 	"buy_thing",
 	"earn_"+str(finalObjective)
 ]
-var objective = "nope" #objectives[0] # TODO ne pas oublier ça
+var objective = objectives[0]
 
 func _ready():
 	mutex = Mutex.new()
@@ -72,6 +72,9 @@ func _ready():
 	availability = [1, 1]
 	objects = [chair1, seat1]
 	
+	customersNode = Node2D.new()
+	add_child(customersNode)
+	
 	eugene = Eugene.instance()
 	add_child(eugene)
 	eugene.position = Vector2(100, 210)
@@ -81,8 +84,7 @@ func _ready():
 	money.setAmount(moneyAmount)
 	add_child(money)
 
-	customersNode = Node2D.new()
-	add_child(customersNode)
+	
 
 	overlay = Overlay.instance()
 	add_child(overlay)
@@ -95,10 +97,10 @@ func _ready():
 	furnitureSellNode2D = Node2D.new()
 	add_child(furnitureSellNode2D)
 	
-	#open_overlay()
+	open_overlay()
 	#on_ready_to_start()
-	prepareBuyingArea()
-	tuto_completed()
+	#prepareBuyingArea()
+	#tuto_completed()
 	
 func whats_my_target(_customer):
 	var index = 0
@@ -242,12 +244,12 @@ func add_customer():
 	customers.push_back(c)
 	customersNode.add_child(c)
 	if clippersLevel == 0:
-		c.init(self, 5)
+		c.init(self, 11)
 	else:
-		c.init(self, 5 - (2 * clippersLevel - 1))
+		c.init(self, 11 - (clippersLevel))
 
 func on_play_note(number):
-	if soundOn: get_node("Sounds/Ting" + str(number % 9 + 1)).play()
+	if soundOn: get_node("Sounds/Ting" + str(number % 8 + 1)).play()
 	
 func on_cut_done(_posX, _customer):
 	availability[_customer.availableIndex] = 1

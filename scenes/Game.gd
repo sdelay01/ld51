@@ -7,8 +7,8 @@ var menu
 var salon
 
 func _ready():
-	#display_menu()
-	on_game_start()
+	display_menu() # todo
+	#on_game_start()
 
 func display_menu():
 	menu = Menu.instance()

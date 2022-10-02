@@ -11,10 +11,9 @@ var price
 
 func init(level):
 	var plural = ""
-	var letter = level * 2 - 1
-	if letter > 1: plural = "s"
+	if level > 1: plural = "s"
 	price = prices[level]
-	$Node2D/Help.text = "-" + str(letter) + "  letter" + plural
+	$Node2D/Help.text = "-" + str(level) + "  letter" + plural
 	$Price.text = "$" + str(price)
 
 func _on_Area2D_input_event(viewport, event, shape_idx):

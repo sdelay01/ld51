@@ -7,7 +7,7 @@ var Title = preload("res://scenes/Title.tscn")
 var cannotClick = false
 
 func _ready():
-	pass
+	$Jingle.play()
 
 func _on_start_input_event(_viewport, event, _shape_idx):
 	if cannotClick: return
