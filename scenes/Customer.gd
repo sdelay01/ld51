@@ -1,6 +1,7 @@
 extends Node2D
 
 signal cut_done(positionX, customer)
+signal play_note(number)
 export (int) var speed = 300 #80
 
 var Key = preload("res://scenes/Key.tscn")
@@ -51,7 +52,6 @@ func find_target():
 		toward = res[0]
 		action = "walks_in"
 		nextAction = res[1]
-		print("assignatin", self, res[2])
 		availableIndex = res[2]
 		return
 		
@@ -65,6 +65,7 @@ func set_target(_toward, _action, _nextAction):
 
 func pressLetter(letter):
 	if letter == actions[actions_done]:
+		emit_signal("play_note", actions_done)
 		hideLetter()
 		actions_done += 1
 		if actions_done == actions_needed:

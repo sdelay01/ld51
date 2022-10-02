@@ -45,6 +45,8 @@ var availability = []
 var objects = []
 var mutex
 
+var soundOn = true
+
 var tempObjects = []
 
 var finalObjective = 200
@@ -65,8 +67,6 @@ func _ready():
 	add_child(furnitureNode2D)
 
 	add_mirror(1, furnitureNode2D)
-	add_mirror(2, furnitureNode2D)
-	
 	var chair1 = add_chair(1, false, furnitureNode2D)
 	var seat1 = add_seat(1, false, furnitureNode2D)
 	availability = [1, 1]
@@ -142,6 +142,7 @@ func prepareBuyingArea():
 	add_child(ba)
 	
 func trigger_pause():
+	if soundOn: $Sounds/Tack.play()
 	if counter and counter.blocked:
 		overlay.hide()
 		unpause()
@@ -151,14 +152,17 @@ func trigger_pause():
 		pause()
 
 func trigger_sound():
-	pass
+	$Sounds/Tack.play()
+	soundOn = !soundOn
 
 func trigger_music():
+	if soundOn: $Sounds/Tack.play()
 	emit_signal("toggle_music")
 
 func trigger_buy(_area, newValue):
 	buyOpen = newValue
 	if buyOpen:
+		if soundOn: $Sounds/OpenBuy.play()
 		pause()
 		eugene.blocked = false
 		overlay.show()
@@ -171,14 +175,16 @@ func trigger_buy(_area, newValue):
 		if clippersLevel < 3:
 			tempObjects.push_back(add_clippers(clippersLevel + 1, furnitureSellNode2D))
 	else:
+		if soundOn: $Sounds/CloseBuy.play()
 		unpause()
 		overlay.hide()
 		for temp in tempObjects:
-			call_deferred("removeBuyingObjects", temp)
+			temp.queue_free()
 		tempObjects = []
 
 func removeBuyingObjects(_temp):
 	_temp.queue_free()
+
 func open_overlay():
 	overlay.modulate.a = 1
 	overlay.show()
@@ -209,7 +215,6 @@ func tuto_completed():
 	counter.connect("timeout", self, "on_counter_timeout")
 	counter.position = Vector2(400, 200)
 	add_child(counter)
-	print("tuto completed")
 	add_customer()
 	prepareButtons()
 
@@ -219,12 +224,14 @@ func on_counter_timeout():
 func add_customer():
 	for cu in customers:
 		if cu.action == "angry":
-			displayAmountBriefly("Salon full! - $20", Color(1, 1, 1, 1), Vector2(300, 300))
+			displayAmountBriefly("Salon full! - $20", Color(1, 1, 1, 1), Vector2(300, 300)) # TODO this le placer
+			if soundOn: $Sounds/CustomerLeaving.play()
 			moneyAmount -= 20
 			money.setAmount(moneyAmount)
 			return 
 	var c = Customer.instance()
 	c.connect("cut_done", self, "on_cut_done")
+	c.connect("play_note", self, "on_play_note")
 	customers.push_back(c)
 	customersNode.add_child(c)
 	if clippersLevel == 0:
@@ -232,8 +239,12 @@ func add_customer():
 	else:
 		c.init(self, 5 - (2 * clippersLevel - 1))
 
+func on_play_note(number):
+	if soundOn: get_node("Sounds/Ting" + str(number % 9 + 1)).play()
+	
 func on_cut_done(_posX, _customer):
 	availability[_customer.availableIndex] = 1
+	if soundOn: $Sounds/Success.play()
 	customers.erase(_customer)
 	if objective == "first_haircut":
 		pause()
@@ -246,7 +257,7 @@ func on_cut_done(_posX, _customer):
 	moneyAmount += 25
 	money.setAmount(moneyAmount)
 
-	displayAmountBriefly(" + $25", Color( 0.894118, 0.819608, 0.196078, 1 ), Vector2(_posX, 50))
+	displayAmountBriefly(" + $25", Color( 1, 1, 1, 1 ), Vector2(_posX + 10, 25))
 
 	if objective == "earn_150" and moneyAmount >= 150:
 		pause()

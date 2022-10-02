@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/pizz8.wav-0c6ea5c367afedc80cc12d641ddd69ff.sample"
+
+[deps]
+
+source_file="res://sounds/pizz8.wav"
+dest_files=[ "res://.import/pizz8.wav-0c6ea5c367afedc80cc12d641ddd69ff.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

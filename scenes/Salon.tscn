@@ -1,6 +1,60 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/Salon.gd" type="Script" id=1]
+[ext_resource path="res://sounds/cut_done.wav" type="AudioStream" id=2]
+[ext_resource path="res://sounds/pizz1.wav" type="AudioStream" id=3]
+[ext_resource path="res://sounds/pizz6.wav" type="AudioStream" id=4]
+[ext_resource path="res://sounds/bad.wav" type="AudioStream" id=5]
+[ext_resource path="res://sounds/pizz7.wav" type="AudioStream" id=6]
+[ext_resource path="res://sounds/pizz8.wav" type="AudioStream" id=7]
+[ext_resource path="res://sounds/pizz4.wav" type="AudioStream" id=8]
+[ext_resource path="res://sounds/pizz2.wav" type="AudioStream" id=9]
+[ext_resource path="res://sounds/pizz3.wav" type="AudioStream" id=10]
+[ext_resource path="res://sounds/pizz5.wav" type="AudioStream" id=11]
+[ext_resource path="res://sounds/tack.wav" type="AudioStream" id=12]
+[ext_resource path="res://sounds/open_buy.wav" type="AudioStream" id=13]
+[ext_resource path="res://sounds/close_buy.wav" type="AudioStream" id=14]
 
 [node name="Salon" type="Node2D"]
 script = ExtResource( 1 )
+
+[node name="Sounds" type="Node2D" parent="."]
+
+[node name="CustomerLeaving" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 5 )
+
+[node name="Success" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 2 )
+
+[node name="Ting1" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 3 )
+
+[node name="Ting2" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 9 )
+
+[node name="Ting3" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 10 )
+
+[node name="Ting4" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 8 )
+
+[node name="Ting5" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 11 )
+
+[node name="Ting6" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 4 )
+
+[node name="Ting7" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 6 )
+
+[node name="Ting8" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 7 )
+
+[node name="Tack" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 12 )
+
+[node name="OpenBuy" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 13 )
+
+[node name="CloseBuy" type="AudioStreamPlayer" parent="Sounds"]
+stream = ExtResource( 14 )

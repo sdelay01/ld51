@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/pizz4.wav-736c1a428957f8e63a524023f51ee986.sample"
+
+[deps]
+
+source_file="res://sounds/pizz4.wav"
+dest_files=[ "res://.import/pizz4.wav-736c1a428957f8e63a524023f51ee986.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

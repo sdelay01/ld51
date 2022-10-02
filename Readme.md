@@ -72,22 +72,29 @@ X Tondeuse
 X Missions
 X Bug de seat et de walks, un seul place pour angry
 X Bug un truc vide pour deux personnes au même moment
+X Sons
+X Son tings appuie sur une bonne touche
+X Son cut_done
+X Son on/off
+  
+Obligatoires
 - Customer angryness => -20$ en rouge rendez-vous non honoré
-- Sons
-  - Son tondeuse
-  - Son ting appuie sur une bonne touche
-  - Son clochette quand quelqu'un rentre
-  - Son batterie quand une coiffure est finie pour in the hair tonight
-
 - Beau compteur
 - le Nombre de lettre demandé augmente avec le temps
-
 - Beau coiffeur
 - Génération de personnages simples
-- La rue
+- les todos
+- Compiler
+
 
 Décor :
+
+- La rue
+- Issue Can't change this state while flushing queries
 Balai, porte, moustache, plante verte, paillason
 pied du fauteuil pas en noir
 fioriture sur les miroirs
 les chaises sont moches
+
+Nice to have
+- Son batterie quand une coiffure est finie pour in the hair tonight
