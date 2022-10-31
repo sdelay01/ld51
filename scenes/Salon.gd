@@ -20,8 +20,6 @@ var moneyAmount = 75
 
 var CustomLabel = preload("res://scenes/Label.tscn")
 
-#var Buy = preload("res://scenes/Blocs/Buy.tscn")
-#var buy
 var Setting = preload("res://scenes/Blocs/Setting.tscn")
 var buyOpen = false
 
@@ -282,8 +280,8 @@ func on_cut_done(_posX, _customer):
 			"Brilliant! You can go your vacations!",
 			"I can close this salon!",
 			"Thank you for playing."
-		], "obj_buy_thing")
-				
+		], "obj_finished")
+
 func obj_first_haircut():
 	unpause()
 	overlay.hide()
@@ -294,6 +292,11 @@ func obj_earn_150():
 	overlay.hide()
 	prepareBuyingArea()
 	objective = "buy_thing"
+	
+func obj_finished():
+	unpause()
+	overlay.hide()
+	objective = "ended"
 
 func pause():
 	eugene.blocked = true
